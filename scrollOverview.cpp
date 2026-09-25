@@ -3471,6 +3471,7 @@ bool CScrollOverview::isCanvasNavigationActive() const {
 }
 
 void CScrollOverview::toggleCanvasNavigation() {
+    syncAnimationConfig();
     const auto MONITOR = pMonitor.lock();
     if (!isPersistentCanvas() || !MONITOR || closing)
         return;
@@ -3523,6 +3524,7 @@ void CScrollOverview::toggleCanvasNavigation() {
 }
 
 void CScrollOverview::refreshCanvasSettings() {
+    syncAnimationConfig();
     const auto MONITOR = pMonitor.lock();
     if (!isCanvasDesktop() || !MONITOR || closing)
         return;
@@ -4537,6 +4539,8 @@ void CScrollOverview::ensureCanvasKeyboardFocus(PHLWINDOW window) {
 }
 
 bool CScrollOverview::followCanvasWindow(PHLWINDOW window, bool syncFocus, bool animate) {
+    if (animate)
+        syncAnimationConfig();
     window = getOverviewWindowToShow(window);
     const auto MONITOR = pMonitor.lock();
     if (!isCanvasDesktop() || !MONITOR || !shouldShowOverviewWindow(window) || closing)
@@ -9173,6 +9177,22 @@ void CScrollOverview::fullRender() {
     return;
 }
 
+void CScrollOverview::syncAnimationConfig() {
+    if (!overviewAnimationConfig)
+        return;
+
+    const auto WINDOWSMOVECONFIG = Config::animationTree()->getAnimationPropertyConfig("windowsMove");
+    const auto WINDOWSMOVEVALUES = WINDOWSMOVECONFIG && WINDOWSMOVECONFIG->pValues ? WINDOWSMOVECONFIG->pValues.lock() : WINDOWSMOVECONFIG;
+    auto       overviewBezier    = ScrollOverview::Config::getAnimationBezier();
+    if (!Animation::mgr()->bezierExists(overviewBezier))
+        overviewBezier = WINDOWSMOVEVALUES && Animation::mgr()->bezierExists(WINDOWSMOVEVALUES->internalBezier) ? WINDOWSMOVEVALUES->internalBezier : "default";
+
+    overviewAnimationConfig->internalSpeed   = ScrollOverview::Config::getAnimationSpeed();
+    overviewAnimationConfig->internalEnabled = ScrollOverview::Config::getAnimationEnabled();
+    if (Animation::mgr()->bezierExists(overviewBezier))
+        overviewAnimationConfig->internalBezier = overviewBezier;
+}
+
 static float hyprlerp(const float& from, const float& to, const float perc) {
     return (to - from) * perc + from;
 }
@@ -9705,6 +9725,7 @@ void CScrollOverview::finishSwitcher(bool cancel) {
 }
 
 void CScrollOverview::landOnWindow(PHLWINDOW window) {
+    syncAnimationConfig();
     const auto MONITOR = pMonitor.lock();
     window             = getOverviewWindowToShow(window);
     if (!isCanvasDesktop() || !MONITOR || closing)
