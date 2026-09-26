@@ -108,11 +108,23 @@ do_enable() {
 }
 
 do_hud() {
+  local lock_file="${XDG_RUNTIME_DIR:-/tmp}/phantomat-hud.lock"
+  local now
+  now=$(date +%s%3N)
+  if [[ -f "$lock_file" ]]; then
+    local last
+    last=$(cat "$lock_file" 2>/dev/null || echo 0)
+    if (( now - last < 400 )); then
+      return 0
+    fi
+  fi
+  echo "$now" > "$lock_file"
+
   if is_loaded; then
-    hyprctl eval 'hl.plugin.spatialoverview.overview("toggle all")' >/dev/null 2>&1 || hyprctl dispatch 'spatialoverview:overview toggle' >/dev/null 2>&1 || true
+    hyprctl eval 'hl.plugin.spatialoverview._dispatch("overview", "toggle all")' >/dev/null 2>&1 || true
   else
     do_enable
-    hyprctl eval 'hl.plugin.spatialoverview.overview("toggle all")' >/dev/null 2>&1 || true
+    hyprctl eval 'hl.plugin.spatialoverview._dispatch("overview", "toggle all")' >/dev/null 2>&1 || true
   fi
 }
 
