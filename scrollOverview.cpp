@@ -7965,7 +7965,7 @@ void CScrollOverview::renderWindowLive(PHLMONITOR monitor, PHLWINDOW window, con
         .workspaceBox         = workspaceBox,
         .selected             = closeOnWindow == window,
         .dragged              = dragged,
-        .cameraTransform      = isCanvasDesktop() && !dragged,
+        .cameraTransform      = false,
         .pseudoFocusWindow    = PSEUDOFOCUSWINDOW,
     });
 }
