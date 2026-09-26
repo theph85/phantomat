@@ -217,7 +217,7 @@ How each key behaves on the canvas, and what the tests check, is in
 Phantomat includes a toggle script and integration snippets for Omarchy's status bar and application menu:
 
 - **Quick toggle CLI**: `omarchy-phantomat-toggle` enables or disables Phantomat in real time, saving canvas window memory and restoring standard tiled layouts.
-- **Status bar glyph**: add the snippet in [`examples/omarchy-bar-module.json`](examples/omarchy-bar-module.json) to `~/.config/omarchy/shell.json` to get a one-click toggle glyph on your bar (`󰊠` active / `󰊡` disabled).
+- **Status bar glyph**: add the snippet in [`examples/omarchy-bar-module.json`](examples/omarchy-bar-module.json) to `~/.config/omarchy/shell.json` to get a HUD overview glyph on your bar (`󰊠` active / `󰊡` disabled) that toggles the HUD overview on click.
 - **`SUPER + Space` menu**: add the entry in [`examples/omarchy-menu.jsonc`](examples/omarchy-menu.jsonc) to `~/.config/omarchy/extensions/omarchy-menu.jsonc` to toggle Phantomat from the launcher with live active status checkmarks.
 
 ## Troubleshooting

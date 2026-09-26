@@ -107,17 +107,29 @@ do_enable() {
   notify "Phantomat" "Enabled (Infinite Canvas Active)"
 }
 
+do_hud() {
+  if is_loaded; then
+    hyprctl eval 'hl.plugin.spatialoverview.overview("toggle all")' >/dev/null 2>&1 || hyprctl dispatch 'spatialoverview:overview toggle' >/dev/null 2>&1 || true
+  else
+    do_enable
+    hyprctl eval 'hl.plugin.spatialoverview.overview("toggle all")' >/dev/null 2>&1 || true
+  fi
+}
+
 do_status() {
   if is_loaded; then
-    printf '{"text":"󰊠","tooltip":"Phantomat: Active (Infinite Canvas)\\nLeft click: disable\\nRight click: toggle HUD","class":"active"}\n'
+    printf '{"text":"󰊠","tooltip":"Phantomat: Active (Infinite Canvas)\\nClick: Toggle HUD overview","class":"active"}\n'
   else
-    printf '{"text":"󰊡","tooltip":"Phantomat: Disabled (Tiled Layout)\\nLeft click: enable","class":"disabled"}\n'
+    printf '{"text":"󰊡","tooltip":"Phantomat: Disabled (Tiled Layout)\\nClick: Enable Phantomat","class":"disabled"}\n'
   fi
 }
 
 case "${1:-toggle}" in
   --status|-s|status)
     do_status
+    ;;
+  hud|--hud|overview)
+    do_hud
     ;;
   enable|on)
     do_enable
@@ -133,7 +145,7 @@ case "${1:-toggle}" in
     fi
     ;;
   *)
-    echo "Usage: $0 {toggle|enable|disable|--status}" >&2
+    echo "Usage: $0 {toggle|hud|enable|disable|--status}" >&2
     exit 1
     ;;
 esac

@@ -3,6 +3,5 @@
   "type": "command",
   "exec": "omarchy-phantomat-toggle --status",
   "interval": 1,
-  "onClick": "omarchy-phantomat-toggle",
-  "onRightClick": "hyprctl dispatch spatialoverview:overview toggle"
+  "onClick": "omarchy-phantomat-toggle hud"
 }

@@ -174,8 +174,7 @@ try:
             "type": "command",
             "exec": "omarchy-phantomat-toggle --status",
             "interval": 1,
-            "onClick": "omarchy-phantomat-toggle",
-            "onRightClick": "hyprctl dispatch spatialoverview:overview toggle"
+            "onClick": "omarchy-phantomat-toggle hud"
         }
         idx = -1
         for i, m in enumerate(left):
@@ -191,6 +190,21 @@ try:
         data["bar"] = bar
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
+    else:
+        changed = False
+        for sec in layout.values():
+            if isinstance(sec, list):
+                for m in sec:
+                    if isinstance(m, dict) and m.get("id") == "phantomat":
+                        if m.get("onClick") != "omarchy-phantomat-toggle hud" or "onRightClick" in m:
+                            m["onClick"] = "omarchy-phantomat-toggle hud"
+                            m.pop("onRightClick", None)
+                            changed = True
+        if changed:
+            bar["layout"] = layout
+            data["bar"] = bar
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
 except Exception:
     pass
 EOF
