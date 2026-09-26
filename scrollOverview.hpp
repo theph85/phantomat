@@ -85,6 +85,7 @@ class CScrollOverview : public IOverview {
     bool         cycleAltTab(int direction);
     void         noteCanvasLayoutChanged();
     Vector2D     restingCameraOffset() const;
+    void         warpCameraOffset(const Vector2D& offset);
     void         saveSharedCanvasLayout();
     void         loadSharedCanvasLayout();
     void         checkpointCanvas();
